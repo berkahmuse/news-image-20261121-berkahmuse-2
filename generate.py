@@ -6,16 +6,19 @@ Draws a one-page newspaper front page summing up Saturday 21 November
 from rectangles, polygons and circles -- no photos, no copied art.
 
 Stories (each verified against independent reporting dated 21 Nov 2026):
- 1. Russia's overnight strikes on Ukraine; missiles land in Poland
-    (BBC, France 24, CBS, El Pais via OneTurn 21 Nov edition).
- 2. AI stock sell-off: S&P 500 into correction, Nasdaq erases 2026 gains
-    (FT, Guardian, BBC via 21 Nov briefs).
- 3. UK-EU sign biggest post-Brexit deals in Brussels (Guardian, BBC).
- 4. COP31 climate talks in Antalya run past deadline (Al Jazeera).
- 5. Houthi missiles at Riyadh intercepted, third night (Al Jazeera).
+ 1. Houthi missiles at Riyadh intercepted before dawn, third night
+    (Reuters, Al Jazeera, AFP).
+ 2. Bitcoin crashes below $60,000, lowest since September 2024
+    (CoinGecko, Bloomberg via BigGo, 21 Nov).
+ 3. Tanker hit by unknown projectile off Oman's Khasab, Strait of Hormuz
+    (Reuters / UKMTO, Saturday 21 Nov).
+ 4. COP31 climate talks in Antalya run past deadline into Saturday
+    (AP, Reuters, theclimatewatch).
+ 5. Fire at Hartha power plant near Basra: 4 killed, 30 injured (Reuters).
  6. M6.9 earthquake in Peru's Andes, 00:09 UTC 21 Nov (USGS).
- 7. Briefs: daraxonrasib pancreatic-cancer pill trial; FBI database
-    reportedly hacked; Gen Z protests in 25 European countries.
+ 7. Briefs: FBI database reportedly hacked (Reuters, 21 Nov); Vietnam
+    passes land law on Saturday (Reuters); NATO chief Rutte due in
+    Warsaw today (BBC, ISW).
 
 Run:  python3 generate.py   -> writes entry.png (1024x1024, <1 MiB).
 The entry program (main.ts) only copies entry.png to the output dir.
@@ -105,77 +108,70 @@ def new_scene(w, h, bg):
 
 
 # ---------------------------------------------------------------- scenes
-def scene_kyiv(w, h):
-    im, d = new_scene(w, h, (14, 27, 51))
-    for sx, sy, sr in [(30, 14, 2), (90, 32, 1), (150, 10, 2), (210, 28, 1),
-                       (300, 12, 2), (360, 34, 1), (430, 16, 2), (520, 30, 1),
-                       (610, 12, 2), (700, 32, 1), (790, 14, 2), (880, 28, 1),
-                       (60, 48, 1), (480, 42, 1), (830, 46, 1)]:
-        d.ellipse([sx - sr, sy - sr, sx + sr, sy + sr], fill=(220, 225, 240))
+def scene_riyadh(w, h):
+    """Riyadh skyline at night, missile intercepts overhead (lead scene)."""
+    im, d = new_scene(w, h, (10, 34, 44))
+    for i in range(60):
+        sx = (i * 53 + 17) % w
+        sy = (i * 29 + 7) % 34 + 4
+        d.ellipse([sx - 1, sy - 1, sx + 1, sy + 1], fill=(220, 230, 240))
     d.ellipse([w - 66, 10, w - 32, 44], fill=(235, 230, 210))
-    for (x0, y0, x1, y1) in [(110, 6, 190, 74), (300, 2, 390, 82),
-                             (520, 4, 610, 76), (700, 2, 780, 70)]:
-        d.line([(x0, y0), (x1, y1)], fill=(255, 220, 140), width=3)
-        d.ellipse([x1 - 4, y1 - 4, x1 + 4, y1 + 4], fill=(255, 240, 180))
     base = h
-    buildings = [(0, 52, 70), (75, 76, 60), (140, 58, 80), (225, 86, 64),
-                 (295, 64, 74), (375, 80, 58), (440, 54, 84), (530, 82, 62),
-                 (598, 60, 78), (682, 80, 60), (748, 58, 82), (836, 78, 64),
-                 (906, 62, 62)]
-    for bx, bh, bw in buildings:
-        d.rectangle([bx, base - bh, bx + bw, base], fill=(8, 14, 30))
-        for wy in range(base - bh + 8, base - 6, 15):
-            for wx in range(bx + 7, bx + bw - 5, 13):
-                if (wx * 7 + wy * 3) % 5 == 0:
-                    d.rectangle([wx, wy, wx + 5, wy + 7], fill=(255, 200, 90))
-    burst(d, 250, base - 54, 22)
-    burst(d, 620, base - 68, 17)
-    burst(d, 880, base - 50, 14)
-    fx, fy = w - 168, 56
-    d.rectangle([fx, fy, fx + 52, fy + 14], fill=(255, 255, 255))
-    d.rectangle([fx, fy + 14, fx + 52, fy + 28], fill=(220, 20, 60))
-    d.rectangle([fx, fy, fx + 52, fy + 28], outline=(0, 0, 0), width=1)
-    d.text((fx - 64, fy + 4), "POLAND", font=font(SANS_B, 15), fill=(255, 255, 255))
+    x, i = 0, 0
+    while x < w:
+        bw = 26 + (i * 13) % 22
+        bh = 34 + (i * 17) % 34
+        d.rectangle([x, base - bh, x + bw, base], fill=(4, 18, 26))
+        for wy in range(base - bh + 8, base - 6, 14):
+            for wx in range(x + 6, x + bw - 5, 12):
+                if (wx + wy) % 3 == 0:
+                    d.rectangle([wx, wy, wx + 4, wy + 6], fill=(255, 200, 90))
+        x += bw + 6
+        i += 1
+    cx, cy = w // 2, 52
+    d.line([(cx - 110, 24), (cx, cy)], fill=(255, 120, 60), width=3)
+    d.line([(cx + 110, 66), (cx, cy)], fill=(120, 220, 255), width=3)
+    d.line([(cx - 90, 68), (cx, cy)], fill=(120, 220, 255), width=3)
+    burst(d, cx, cy, 15)
+    d.text((12, 6), "RIYADH  •  3RD NIGHT", font=font(SANS_B, 14),
+           fill=(200, 220, 225))
     return im
 
 
-def scene_markets(w, h):
+def scene_bitcoin(w, h):
     im, d = new_scene(w, h, (255, 250, 244))
     d.rectangle([0, 0, w - 1, h - 1], outline=(200, 190, 170), width=1)
     for gy in range(18, h - 6, 20):
         d.line([(8, gy), (w - 8, gy)], fill=(232, 224, 210), width=1)
-    pts = [(14, 20), (58, 27), (102, 23), (146, 42), (190, 38),
-           (234, 58), (278, 54), (322, 74), (366, 70), (410, h - 18)]
+    pts = [(14, 26), (58, 22), (102, 30), (146, 28), (190, 40),
+           (234, 44), (278, 58), (322, 56), (366, 72), (410, h - 16)]
     d.line(pts, fill=RED, width=5, joint="curve")
     ex, ey = pts[-1]
     d.polygon([(ex, ey), (ex - 16, ey - 4), (ex - 6, ey + 12)], fill=RED)
-    d.text((14, h - 26), "S&P 500  -3.7%", font=font(SANS_B, 16), fill=RED)
-    label = "NASDAQ  -5.3%"
-    lw = d.textlength(label, font=font(SANS_B, 16))
-    d.text((w - 12 - lw, 8), label, font=font(SANS_B, 16), fill=RED)
+    d.ellipse([w - 58, 8, w - 14, 52], fill=(247, 147, 26))
+    d.text((w - 45, 16), "B", font=font(SANS_B, 26), fill=(255, 255, 255))
+    d.text((14, h - 26), "BTC  -10%", font=font(SANS_B, 16), fill=RED)
     return im
 
 
-def scene_uk_eu(w, h):
-    im, d = new_scene(w, h, (255, 250, 244))
-    d.rectangle([0, 0, w - 1, h - 1], outline=(200, 190, 170), width=1)
-    ux, uy, uw, uh = 16, 8, 118, 48
-    d.rectangle([ux, uy, ux + uw, uy + uh], fill=(1, 33, 105))
-    d.line([(ux, uy), (ux + uw, uy + uh)], fill=(255, 255, 255), width=9)
-    d.line([(ux + uw, uy), (ux, uy + uh)], fill=(255, 255, 255), width=9)
-    d.line([(ux + uw // 2, uy), (ux + uw // 2, uy + uh)], fill=(255, 255, 255), width=16)
-    d.line([(ux, uy + uh // 2), (ux + uw, uy + uh // 2)], fill=(255, 255, 255), width=16)
-    d.line([(ux + uw // 2, uy), (ux + uw // 2, uy + uh)], fill=(200, 16, 46), width=9)
-    d.line([(ux, uy + uh // 2), (ux + uw, uy + uh // 2)], fill=(200, 16, 46), width=9)
-    d.rectangle([ux, uy, ux + uw, uy + uh], outline=(120, 110, 90), width=1)
-    ex, ey, ew, eh = w - 134, 8, 118, 48
-    d.rectangle([ex, ey, ex + ew, ey + eh], fill=(0, 51, 153))
-    for i in range(12):
-        ang = -math.pi / 2 + i * math.pi / 6
-        star(d, ex + ew // 2 + 23 * math.cos(ang),
-             ey + eh // 2 + 19 * math.sin(ang), 5, GOLD)
-    d.rectangle([ex, ey, ex + ew, ey + eh], outline=(120, 110, 90), width=1)
-    d.text((16, h - 18), "LONDON  +  BRUSSELS", font=font(SANS_B, 13), fill=MUTED)
+def scene_tanker(w, h):
+    im, d = new_scene(w, h, (16, 52, 74))
+    d.ellipse([w - 70, 8, w - 40, 38], fill=(235, 230, 210))
+    for sx, sy in [(24, 12), (70, 26), (130, 10), (190, 22), (250, 14),
+                   (300, 24), (360, 12), (420, 26)]:
+        if sx < w:
+            d.ellipse([sx - 1, sy - 1, sx + 1, sy + 1], fill=(220, 230, 240))
+    sea = h - 22
+    d.rectangle([0, sea, w, h], fill=(10, 38, 58))
+    for wx in range(0, w, 34):
+        d.line([(wx, sea + 6), (wx + 16, sea + 6)], fill=(90, 140, 170), width=2)
+    hx, hy = 60, sea - 26
+    d.rectangle([hx, hy, hx + 300, sea], fill=(30, 30, 34))
+    d.rectangle([hx, hy - 14, hx + 300, hy], fill=(200, 60, 40))
+    for cx in range(hx + 16, hx + 290, 34):
+        d.rectangle([cx, hy - 12, cx + 22, hy - 2], fill=(240, 200, 90))
+    d.rectangle([hx + 310, sea - 44, hx + 336, sea], fill=(60, 60, 66))
+    burst(d, hx + 300, sea - 8, 13)
     return im
 
 
@@ -191,24 +187,20 @@ def scene_cop31(w, h):
     return im
 
 
-def scene_riyadh(w, h):
-    im, d = new_scene(w, h, (10, 34, 44))
-    for sx, sy in [(24, 12), (70, 26), (130, 10), (190, 22), (250, 14)]:
-        d.ellipse([sx - 1, sy - 1, sx + 1, sy + 1], fill=(220, 230, 240))
+def scene_basra(w, h):
+    im, d = new_scene(w, h, (64, 32, 24))
+    d.ellipse([w // 2 - 24, 6, w // 2 + 24, 54], fill=(255, 120, 40))
+    for sx, sy, sr in [(20, 12, 6), (60, 20, 8), (120, 10, 7), (200, 18, 6),
+                       (260, 12, 8)]:
+        d.ellipse([sx - sr, sy - sr, sx + sr, sy + sr], fill=(120, 80, 60))
     base = h
-    for bx, bh, bw in [(0, 40, 34), (40, 56, 30), (76, 44, 36), (118, 58, 26),
-                       (150, 46, 34), (190, 56, 30), (226, 42, 36), (268, 52, 30)]:
-        d.rectangle([bx, base - bh, bx + bw, base], fill=(4, 18, 26))
-        for wy in range(base - bh + 8, base - 6, 14):
-            for wx in range(bx + 6, bx + bw - 5, 12):
-                if (wx + wy) % 3 == 0:
-                    d.rectangle([wx, wy, wx + 4, wy + 6], fill=(255, 200, 90))
-    d.line([(40, 26), (150, 58)], fill=(255, 120, 60), width=3)
-    d.line([(260, 66), (150, 58)], fill=(120, 220, 255), width=3)
-    d.line([(60, 68), (150, 58)], fill=(120, 220, 255), width=3)
-    burst(d, 150, 58, 15)
-    d.text((12, 6), "RIYADH  •  3RD NIGHT", font=font(SANS_B, 14),
-           fill=(200, 220, 225))
+    for tx in (30, 110, 190):
+        d.polygon([(tx, base), (tx + 18, 26), (tx + 52, 26), (tx + 70, base)],
+                  fill=(40, 22, 16))
+        d.ellipse([tx + 18, 20, tx + 52, 32], fill=(90, 50, 30))
+    burst(d, 150, base - 12, 16)
+    d.text((12, h - 22), "HARTHA, IRAQ", font=font(SANS_B, 13),
+           fill=(255, 200, 150))
     return im
 
 
@@ -254,16 +246,15 @@ def build():
     y += 18
 
     # ---- lead story (flow-based) ----
-    d.text((M, y), "WAR IN EUROPE  •  LEAD STORY", font=font(SANS_B, 16), fill=RED)
+    d.text((M, y), "GULF  •  LEAD STORY", font=font(SANS_B, 16), fill=RED)
     y += 26
-    img.paste(scene_kyiv(CW, 112), (M, y))
+    img.paste(scene_riyadh(CW, 112), (M, y))
     y += 112 + 8
-    head = wrap(d, "RUSSIA'S BIGGEST STRIKES HIT UKRAINE; MISSILES LAND IN POLAND",
+    head = wrap(d, "HOUTHI MISSILES AT RIYADH DOWNED ON THIRD NIGHT",
                 font(SERIF, 34), CW)
     y = text_block(d, M, y, head, font(SERIF, 34), leading=41)
-    deck = wrap(d, "More than 400 drones and 110 missiles fired overnight; at least "
-                "eight killed in Kyiv. Warsaw calls the incursion a deliberate "
-                "provocation.", font(SANS, 17), CW)
+    deck = wrap(d, "Three ballistic missiles intercepted before dawn on Saturday; "
+                "Houthis threaten ports and a power station.", font(SANS, 17), CW)
     y = text_block(d, M, y + 2, deck, font(SANS, 17), leading=22)
     y += 6
     hrule(d, M, W - M, y, 2)
@@ -274,12 +265,12 @@ def build():
     row2_start = y
     row2_tops = []
     for px, kick, headline, deck, scene in [
-        (M, "MARKETS", "AI SELL-OFF DRAGS S&P 500 INTO CORRECTION",
-         "Nasdaq erases its 2026 gains; Anthropic slides after its record debut.",
-         scene_markets),
-        (M + half + 16, "TRADE", "UK AND EU SIGN BIGGEST POST-BREXIT DEALS",
-         "Food, carbon and youth-mobility pacts agreed in Brussels.",
-         scene_uk_eu),
+        (M, "MARKETS", "BITCOIN CRASHES BELOW $60,000",
+         "Lowest since September 2024; about $2bn in leveraged bets wiped out in a day.",
+         scene_bitcoin),
+        (M + half + 16, "SHIPPING", "TANKER HIT IN STRAIT OF HORMUZ",
+         "Unknown projectile strikes vessel off Oman; no injuries reported.",
+         scene_tanker),
     ]:
         py = y
         d.text((px, py), kick, font=font(SANS_B, 15), fill=RED)
@@ -302,8 +293,8 @@ def build():
     for i, (kick, headline, deck, scene) in enumerate([
         ("CLIMATE  •  COP31", "TALKS RUN PAST DEADLINE",
          "Antalya summit deadlocked over fossil fuels.", scene_cop31),
-        ("GULF", "HOUTHI MISSILES AT RIYADH DOWNED",
-         "Coalition intercepts three missiles on the third night.", scene_riyadh),
+        ("DISASTER  •  IRAQ", "FIRE AT BASRA POWER PLANT KILLS FOUR",
+         "At least four dead, 30 injured at Hartha station.", scene_basra),
         ("EARTHQUAKE", "M6.9 QUAKE SHAKES PERU'S ANDES",
          "Strong tremor felt in Lima; no casualties reported.", scene_peru),
     ]):
@@ -326,9 +317,9 @@ def build():
     d.text((M, y), "IN BRIEF", font=font(SANS_B, 15), fill=RED)
     y += 22
     briefs = [
-        ("MEDICINE", "Cancer pill makes tumours undetectable in 1 of 12 patients."),
         ("CYBER", "FBI database reportedly hacked amid US outages."),
-        ("PROTEST", "Gen Z protests spread across 25 European countries."),
+        ("POLITICS", "Vietnam passes land-seizure fast-track."),
+        ("NATO", "NATO chief due in Warsaw today."),
     ]
     bw = (CW - 32) // 3
     by = y
@@ -344,7 +335,7 @@ def build():
 
     # ---- footer ----
     y = centered(d, W // 2, y,
-                 "Sources: BBC  •  Reuters  •  Al Jazeera  •  FT  •  The Guardian  •  USGS",
+                 "Sources: Reuters  •  Al Jazeera  •  BBC  •  USGS  •  CoinGecko",
                  font(SANS, 13), MUTED)
     y = centered(d, W // 2, y + 2,
                  "All events of 21 November 2026  •  Drawn by an AI agent for make.fun",

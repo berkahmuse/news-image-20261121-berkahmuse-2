@@ -16,16 +16,15 @@ first reported on, 21 November 2026:
 
 | Story | What the page says |
 |---|---|
-| Lead — War in Europe | Russia's biggest overnight strikes on Ukraine: 400+ drones and 110 missiles; at least eight killed in Kyiv; missiles land in Poland, which Warsaw calls a deliberate provocation. |
-| Markets | AI sell-off drags the S&P 500 into correction (−3.7%); Nasdaq erases its 2026 gains (−5.3%). |
-| Trade | UK and EU sign their biggest post-Brexit deals — food, carbon, youth mobility — in Brussels. |
-| Climate — COP31 | Talks in Antalya run past deadline, deadlocked over fossil fuels. |
-| Gulf | Houthi missiles aimed at Riyadh intercepted for a third night. |
-| Earthquake | M6.9 quake shakes Peru's Andes, felt in Lima; no casualties reported. |
-| In brief | Cancer pill makes tumours undetectable in 1 of 12 patients; FBI database reportedly hacked; Gen Z protests spread across 25 European countries. |
+| Lead — Gulf | Houthi missiles at Riyadh intercepted before dawn on Saturday — three ballistic missiles downed, third night of alerts; Houthis threaten ports and a power station. |
+| Markets | Bitcoin crashes below $60,000, lowest since September 2024; about $2bn in leveraged bets wiped out in a day. |
+| Shipping | Tanker hit by an unknown projectile in the Strait of Hormuz off Oman; no injuries reported. |
+| Climate — COP31 | Talks in Antalya run past deadline into Saturday, deadlocked over fossil fuels. |
+| Disaster — Iraq | Fire at the Hartha power plant near Basra kills at least four, injures 30. |
+| Earthquake | M6.9 quake shakes Peru's Andes at 00:09 UTC, felt in Lima; no casualties reported. |
+| In brief | FBI database reportedly hacked; Vietnam passes land-seizure fast-track on Saturday; NATO chief due in Warsaw today. |
 
-Sources checked against BBC, Reuters, Al Jazeera, FT, The Guardian and
-USGS reporting dated 21 November 2026. One story that appeared in some
+Sources checked against Reuters, Al Jazeera, BBC, USGS and CoinGecko One story that appeared in some
 21 November round-ups — the ICJ's Myanmar/Rohingya genocide ruling — was
 deliberately left out: it was handed down on 19 November, not the 21st.
 
